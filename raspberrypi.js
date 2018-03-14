@@ -76,6 +76,63 @@ RaspberryPi.prototype.getInfo = function () {
                 }
             },
             {
+                opcode: 'hello-fng-motor',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'TB6612FNG,  AIN1 [AIN1], AIN2 [AIN2], BIN1 [BIN1], BIN2 [BIN2], PWMA [PWMA], PWMB [PWMB], STBY [STBY] of [DEVICE_NAME] and let\'s call MotorA [MOTORA_NAME], Motor B [MOTORB_NAME], and the whole block [MOTORBLOCK_NAME]',
+                func: 'hellofng',
+                arguments: {
+                    AIN1: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 23
+                    },
+                    AIN2: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 24
+                    },
+
+                    PWMA: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 25
+                    },
+
+                    BIN1: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 19
+                    },
+                    BIN2: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 20
+                    },
+
+                    PWMB: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 21
+                    },
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+
+                    MOTORA_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'MotorA'
+                    },
+                    MOTORB_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'MotorB'
+                    },
+                    MOTORBLOCK_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'MotorBlock'
+                    },
+                    STBY: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: '13'
+                    },
+                }
+            },
+            {
                 opcode: 'led-light',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
@@ -89,6 +146,27 @@ RaspberryPi.prototype.getInfo = function () {
                     PIN: {
                         type: Scratch.ArgumentType.NUMBER,
                         defaultValue: 17
+                    },
+                    POWER: {
+                        type: Scratch.ArgumentType.NUMBER,
+                        defaultValue: 100
+                    }
+                }
+            },
+            {
+                opcode: 'motor-power',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'Set Motor [MOTOR_NAME] of Raspberry Pi named [DEVICE_NAME] to power [POWER]',
+                func: 'powerMotor',
+                arguments: {
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+                    MOTOR_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: "MotorA"
                     },
                     POWER: {
                         type: Scratch.ArgumentType.NUMBER,
@@ -191,6 +269,10 @@ RaspberryPi.prototype.helloSensor1 = function (args) {
 
 };
 
+RaspberryPi.prototype.hellofng = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/initialization", JSON.stringify({command: "INIT", args: args}));
+
+};
 
 RaspberryPi.prototype.whenTilted = function (args) {
     return this.state.tilted;
@@ -201,6 +283,10 @@ RaspberryPi.prototype.isTilted = function (args) {
 
 RaspberryPi.prototype.powerLED = function (args) {
     this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/led", JSON.stringify({command: "LED", args: args}))
+
+};
+RaspberryPi.prototype.powerMotor = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
 
 };
 
