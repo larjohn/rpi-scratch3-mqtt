@@ -264,7 +264,7 @@ RaspberryPi.prototype.getInfo = function () {
             }
         ],
         menus: {
-            sensorTypes: [SensorType.TILT],
+            sensorTypes: [SensorType.TILT, SensorType.PROXIMITY],
 
         },
         // translations
