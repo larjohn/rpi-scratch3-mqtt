@@ -327,11 +327,11 @@ RaspberryPi.prototype.powerMotor = function (args) {
 
 };
 RaspberryPi.prototype.brakeMotor = function (args) {
-    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
+    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR.BRAKE", args: args}))
 
 };
 RaspberryPi.prototype.unbrakeMotor = function (args) {
-    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
+    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR.UNBRAKE", args: args}))
 
 };
 
