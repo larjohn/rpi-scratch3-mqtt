@@ -16,6 +16,7 @@ let  RaspberryPi = function () {
 };
 const SensorType = {
     TILT: 'Tilt Switch',
+    PROXIMITY: 'Proximity Sensor'
 
 };
 
@@ -237,10 +238,29 @@ RaspberryPi.prototype.getInfo = function () {
 
                     SENSOR_NAME: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: 'Sensor1'
+                        defaultValue: 'tiltSensor'
                     }
                 },
                 func: 'isTilted'
+            },
+
+            {
+                opcode: 'isProximal',
+                blockType: Scratch.BlockType.BOOLEAN,
+                text: 'is an object near the proximity sensor named [SENSOR_NAME] of Raspberry Pi [DEVICE_NAME]?',
+                arguments: {
+
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+
+                    SENSOR_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'proximitySensor'
+                    }
+                },
+                func: 'isProximal'
             }
         ],
         menus: {
@@ -302,6 +322,21 @@ RaspberryPi.prototype.helloSensor1 = function (args) {
         });
     }
 
+    if(args.SENSORTYPE === SensorType.PROXIMITY){
+        this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME] = {proximal: false};
+        this.clients[args.DEVICE_NAME].publish("rpi/subscription", JSON.stringify({command: "SUBSCRIBE", args: {ALIAS:args.SENSOR_NAME, DEVICE: "IR_PROXIMITY", PIN: args.PIN}}));
+
+
+        client.on('message', function (topic, message) {
+
+            switch (topic){
+                case "rpi/devices/sensors/proximity/"+args.PIN:
+                    self.devices[args.DEVICE_NAME].state[args.SENSOR_NAME].proximal = String(message) === "true";
+                    break;
+            }
+        });
+    }
+
 
 
 };
@@ -316,6 +351,13 @@ RaspberryPi.prototype.whenTilted = function (args) {
 };
 RaspberryPi.prototype.isTilted = function (args) {
     return this.devices[args.DEVICE_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME].tilted;
+};
+
+RaspberryPi.prototype.whenTilted = function (args) {
+    return this.state.isProximal;
+};
+RaspberryPi.prototype.isProximal = function (args) {
+    return this.devices[args.DEVICE_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME].proximal;
 };
 
 RaspberryPi.prototype.powerLED = function (args) {
