@@ -79,7 +79,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'hello-fng-motor',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'TB6612FNG,  AIN1 [AIN1], AIN2 [AIN2], BIN1 [BIN1], BIN2 [BIN2], PWMA [PWMA], PWMB [PWMB], STBY [STBY] of [DEVICE_NAME] and let\'s call MotorA [MOTORA_NAME], Motor B [MOTORB_NAME], and the whole block [MOTORBLOCK_NAME]',
+                text: 'TB6612FNG:  AIN1 [AIN1], AIN2 [AIN2], BIN1 [BIN1], BIN2 [BIN2], PWMA [PWMA], PWMB [PWMB], STBY [STBY] of [DEVICE_NAME] and let\'s call MotorA [MOTORA_NAME], Motor B [MOTORB_NAME] and the whole block [MOTORBLOCK_NAME]',
                 func: 'hellofng',
                 arguments: {
                     AIN1: {
@@ -172,6 +172,43 @@ RaspberryPi.prototype.getInfo = function () {
                         type: Scratch.ArgumentType.NUMBER,
                         defaultValue: 100
                     }
+                }
+            },
+
+            {
+                opcode: 'motor-brake',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'Brake Motor [MOTOR_NAME] of Raspberry Pi named [DEVICE_NAME]',
+                func: 'brakeMotor',
+                arguments: {
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+                    MOTOR_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: "MotorA"
+                    },
+
+                }
+            },
+            {
+                opcode: 'motor-unbrake',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'Release the brake of Motor [MOTOR_NAME] of Raspberry Pi named [DEVICE_NAME]',
+                func: 'unbrakeMotor',
+                arguments: {
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+                    MOTOR_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: "MotorA"
+                    },
+
                 }
             },
             {
@@ -286,6 +323,14 @@ RaspberryPi.prototype.powerLED = function (args) {
 
 };
 RaspberryPi.prototype.powerMotor = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
+
+};
+RaspberryPi.prototype.brakeMotor = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
+
+};
+RaspberryPi.prototype.unbrakeMotor = function (args) {
     this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
 
 };
