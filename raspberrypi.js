@@ -167,7 +167,7 @@ RaspberryPi.prototype.getInfo = function () {
 
                     STEPPERA_NAME: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: 'MotorA'
+                        defaultValue: 'StepperA'
                     }
 
                 }
@@ -228,9 +228,9 @@ RaspberryPi.prototype.getInfo = function () {
                         type: Scratch.ArgumentType.STRING,
                         defaultValue: 'rpi1'
                     },
-                    MOTOR_NAME: {
+                    STEPPER_NAME: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: "MotorA"
+                        defaultValue: "StepperA"
                     },
                     DELAY: {
                         type: Scratch.ArgumentType.NUMBER,
