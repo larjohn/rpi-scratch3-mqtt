@@ -133,6 +133,47 @@ RaspberryPi.prototype.getInfo = function () {
                     },
                 }
             },
+
+            {
+                opcode: 'hello-uln-stepper',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'ULN2003 Stepper:  IN [IN1], IN2 [IN2], IN3 [IN3], IN4 [IN4] of [DEVICE_NAME] and let\'s call StepperA [STEPPERA_NAME]',
+                func: 'hellouln',
+                arguments: {
+                    IN1: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 22
+                    },
+                    IN2: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 23
+                    },
+
+                    IN3: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 24
+                    },
+                    IN4: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 25
+                    },
+
+
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+
+                    STEPPERA_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'MotorA'
+                    }
+
+                }
+            },
+
+
             {
                 opcode: 'led-light',
                 blockType: Scratch.BlockType.COMMAND,
@@ -170,6 +211,32 @@ RaspberryPi.prototype.getInfo = function () {
                         defaultValue: "MotorA"
                     },
                     POWER: {
+                        type: Scratch.ArgumentType.NUMBER,
+                        defaultValue: 100
+                    }
+                }
+            },
+
+            {
+                opcode: 'stepper-power',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'Set stepper motor [STEPPER_NAME] of Raspberry Pi named [DEVICE_NAME] to delay [DELAY] and steps [STEPS]',
+                func: 'powerStepper',
+                arguments: {
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+                    MOTOR_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: "MotorA"
+                    },
+                    DELAY: {
+                        type: Scratch.ArgumentType.NUMBER,
+                        defaultValue: 100
+                    },
+                    STEPS: {
                         type: Scratch.ArgumentType.NUMBER,
                         defaultValue: 100
                     }
@@ -346,6 +413,11 @@ RaspberryPi.prototype.hellofng = function (args) {
 
 };
 
+RaspberryPi.prototype.hellouln = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/initialization", JSON.stringify({command: "INIT_STEPPER", args: args}));
+
+};
+
 RaspberryPi.prototype.whenTilted = function (args) {
     return this.state.tilted;
 };
@@ -366,6 +438,10 @@ RaspberryPi.prototype.powerLED = function (args) {
 };
 RaspberryPi.prototype.powerMotor = function (args) {
     this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/motor", JSON.stringify({command: "MOTOR", args: args}))
+
+};
+RaspberryPi.prototype.powerStepper = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/devices/actuators/stepper", JSON.stringify({command: "STEPPER", args: args}))
 
 };
 RaspberryPi.prototype.brakeMotor = function (args) {
