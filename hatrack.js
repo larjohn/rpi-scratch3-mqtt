@@ -4,7 +4,7 @@ this.runtime = runtime;
 
 HatRack.prototype.getInfo = function () {
     return {
-        id: 'hat_rack',
+        id: 'hatrack',
         name: 'hat rack',
         blocks: [
             {
@@ -31,9 +31,29 @@ HatRack.prototype.getInfo = function () {
                     }
                 }
             },
+            {
+                // @todo this hat needs to be set itself to restart existing
+                // threads like Scratch 2's behaviour.
+                opcode: 'whenMotionGreaterThan',
+                text: 'when video motion > [REFERENCE]',
+                blockType: Scratch.BlockType.HAT,
+                arguments: {
+                    REFERENCE: {
+                        type: Scratch.ArgumentType.NUMBER,
+                        defaultValue: 10
+                    }
+                }
+            }
         ]
     };
 };
+
+
+HatRack.prototype.whenMotionGreaterThan = function (args, util) {
+
+    return  Math.random() >= 0.5;
+};
+
 
 HatRack.prototype.isTipped = function (args) {
     return Math.random() >= 0.5;

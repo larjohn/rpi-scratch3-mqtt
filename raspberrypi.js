@@ -20,6 +20,11 @@ const SensorType = {
 
 };
 
+const MotorBank = {
+    A: 'A',
+    B: 'B'
+
+};
 /**
  * @return {object} This extension's metadata.
  */
@@ -29,14 +34,14 @@ RaspberryPi.prototype.getInfo = function () {
     return {
         id: 'rpi',
 
-        name: 'raspberry pi',
+        name: 'Raspberry Pi',
 
         blocks: [
             {
                 opcode: 'hello-pi',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'There is a Raspberry Pi on address [ADDRESS] and let\'s call it [DEVICE_NAME]',
+                text: 'connect to [DEVICE_NAME] on address [ADDRESS]',
                 func: 'helloPi',
                 arguments: {
 
@@ -54,7 +59,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'hello-sensor-1',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'There is a sensor of type [SENSORTYPE] at pin gpio[PIN] of [DEVICE_NAME] and let\'s call it [SENSOR_NAME]',
+                text: 'connect [SENSORTYPE] [SENSOR_NAME]at gpio[PIN] of [DEVICE_NAME]',
                 func: 'helloSensor1',
                 arguments: {
                     SENSORTYPE: {
@@ -80,7 +85,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'hello-fng-motor',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'TB6612FNG:  AIN1 [AIN1], AIN2 [AIN2], BIN1 [BIN1], BIN2 [BIN2], PWMA [PWMA], PWMB [PWMB], STBY [STBY] of [DEVICE_NAME] and let\'s call MotorA [MOTORA_NAME], Motor B [MOTORB_NAME] and the whole block [MOTORBLOCK_NAME]',
+                text: 'connect TB6612FNG[MOTORBLOCK_NAME] AIN1[AIN1], AIN2[AIN2], BIN1[BIN1], BIN2[BIN2], PWMA[PWMA], PWMB[PWMB], STBY[STBY] of [DEVICE_NAME] and call MotorA[MOTORA_NAME], Motor B[MOTORB_NAME] ',
                 func: 'hellofng',
                 arguments: {
                     AIN1: {
@@ -135,10 +140,54 @@ RaspberryPi.prototype.getInfo = function () {
             },
 
             {
+                opcode: 'hello-fng-motor-single',
+                blockType: Scratch.BlockType.COMMAND,
+                blockAllThreads: false,
+                text: 'connect TB6612FNG[MOTORSLOT] IN1:[IN1] IN2:[IN2] PWM:[PWM] STBY:[STBY] of [DEVICE_NAME] and call it [MOTOR_NAME]',
+                func: 'hellofngsingle',
+                arguments: {
+                    MOTORSLOT: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue : "A",
+                        menu: 'MOTORBANKS',
+                    },
+                    IN1: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 17,
+                    },
+                    IN2: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 18
+                    },
+
+                    PWM: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 15
+                    },
+
+
+                    DEVICE_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'rpi1'
+                    },
+
+                    MOTOR_NAME: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'Motor1'
+                    },
+
+                    STBY: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: '14'
+                    }
+                }
+            },
+
+            {
                 opcode: 'hello-uln-stepper',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'ULN2003 Stepper:  IN [IN1], IN2 [IN2], IN3 [IN3], IN4 [IN4] of [DEVICE_NAME] and let\'s call StepperA [STEPPERA_NAME]',
+                text: 'connect ULN2003 stepper [STEPPERA_NAME] IN1:[IN1] IN2:[IN2] IN3:[IN3] IN4:[IN4] of [DEVICE_NAME]',
                 func: 'hellouln',
                 arguments: {
                     IN1: {
@@ -178,7 +227,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'led-light',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'Switch LED light at pin [PIN] of Raspberry Pi named [DEVICE_NAME] to power [POWER]',
+                text: 'switch LED light at gpio [PIN] of [DEVICE_NAME] to power [POWER]',
                 func: 'powerLED',
                 arguments: {
                     DEVICE_NAME: {
@@ -199,7 +248,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'motor-power',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'Set Motor [MOTOR_NAME] of Raspberry Pi named [DEVICE_NAME] to power [POWER]',
+                text: 'set Motor [MOTOR_NAME] of [DEVICE_NAME] to power [POWER]',
                 func: 'powerMotor',
                 arguments: {
                     DEVICE_NAME: {
@@ -208,7 +257,7 @@ RaspberryPi.prototype.getInfo = function () {
                     },
                     MOTOR_NAME: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: "MotorA"
+                        defaultValue: "Motor1"
                     },
                     POWER: {
                         type: Scratch.ArgumentType.NUMBER,
@@ -221,7 +270,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'stepper-power',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'Set stepper motor [STEPPER_NAME] of Raspberry Pi named [DEVICE_NAME] to delay [DELAY] and steps [STEPS]',
+                text: 'set stepper motor [STEPPER_NAME] of [DEVICE_NAME] to delay [DELAY] and steps [STEPS]',
                 func: 'powerStepper',
                 arguments: {
                     DEVICE_NAME: {
@@ -234,11 +283,11 @@ RaspberryPi.prototype.getInfo = function () {
                     },
                     DELAY: {
                         type: Scratch.ArgumentType.NUMBER,
-                        defaultValue: 100
+                        defaultValue: 0
                     },
                     STEPS: {
                         type: Scratch.ArgumentType.NUMBER,
-                        defaultValue: 100
+                        defaultValue: 30
                     }
                 }
             },
@@ -247,7 +296,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'motor-brake',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'Brake Motor [MOTOR_NAME] of Raspberry Pi named [DEVICE_NAME]',
+                text: 'brake Motor [MOTOR_NAME] of [DEVICE_NAME]',
                 func: 'brakeMotor',
                 arguments: {
                     DEVICE_NAME: {
@@ -256,7 +305,7 @@ RaspberryPi.prototype.getInfo = function () {
                     },
                     MOTOR_NAME: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: "MotorA"
+                        defaultValue: "Motor1"
                     },
 
                 }
@@ -265,7 +314,7 @@ RaspberryPi.prototype.getInfo = function () {
                 opcode: 'motor-unbrake',
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'Release the brake of Motor [MOTOR_NAME] of Raspberry Pi named [DEVICE_NAME]',
+                text: 'release the brake of Motor [MOTOR_NAME] of [DEVICE_NAME]',
                 func: 'unbrakeMotor',
                 arguments: {
                     DEVICE_NAME: {
@@ -274,7 +323,7 @@ RaspberryPi.prototype.getInfo = function () {
                     },
                     MOTOR_NAME: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: "MotorA"
+                        defaultValue: "Motor1"
                     },
 
                 }
@@ -295,7 +344,7 @@ RaspberryPi.prototype.getInfo = function () {
             {
                 opcode: 'isTilted',
                 blockType: Scratch.BlockType.BOOLEAN,
-                text: 'is tilt sensor named [SENSOR_NAME] of Raspberry Pi [DEVICE_NAME] tilted?',
+                text: 'tilt sensor [SENSOR_NAME] of [DEVICE_NAME] tilted?',
                 arguments: {
 
                     DEVICE_NAME: {
@@ -314,7 +363,7 @@ RaspberryPi.prototype.getInfo = function () {
             {
                 opcode: 'isProximal',
                 blockType: Scratch.BlockType.BOOLEAN,
-                text: 'is an object near the proximity sensor named [SENSOR_NAME] of Raspberry Pi [DEVICE_NAME]?',
+                text: 'any object near the proximity sensor [SENSOR_NAME] of [DEVICE_NAME]?',
                 arguments: {
 
                     DEVICE_NAME: {
@@ -332,12 +381,13 @@ RaspberryPi.prototype.getInfo = function () {
         ],
         menus: {
             sensorTypes: [SensorType.TILT, SensorType.PROXIMITY],
+            MOTORBANKS: [MotorBank.A, MotorBank.B]
 
         },
         // translations
         translation_map: {
             fr: {
-                'extensionName': 'RaspberryPi',
+                'extensionName': 'Raspberry Pi',
                 'notification-show': 'Nouveau Notification titre [TITLE] soustitre [CONTENT] image [IMAGE]',
                 'notification-show.TITLE_default': 'Bonjour, Monde!',
                 'notification-show.CONTENT_default': 'Je suis un notification.',
@@ -410,6 +460,11 @@ RaspberryPi.prototype.helloSensor1 = function (args) {
 
 RaspberryPi.prototype.hellofng = function (args) {
     this.clients[args.DEVICE_NAME].publish("rpi/initialization", JSON.stringify({command: "INIT", args: args}));
+
+};
+
+RaspberryPi.prototype.hellofngsingle = function (args) {
+    this.clients[args.DEVICE_NAME].publish("rpi/initialization", JSON.stringify({command: "INIT_SINGLE", args: args}));
 
 };
 
