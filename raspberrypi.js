@@ -32,7 +32,7 @@ RaspberryPi.prototype.getInfo = function () {
 
 
     return {
-        id: 'rpi',
+        id: 'https://rawgit.com/larjohn/rpi-scratch3-mqtt/master/raspberrypi.js',
 
         name: 'Raspberry Pi',
 
