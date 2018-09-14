@@ -330,22 +330,22 @@ RaspberryPi.prototype.getInfo = function () {
             },
             {
                   opcode: 'whenTilted',
-                    blockType: BlockType.HAT,
+                    blockType: Scratch.BlockType.HAT,
                     func: 'whenTilted',
                     text: 'when [SENSOR_NAME] of [DEVICE_NAME] is tilted',
                     arguments: {
 
                         DEVICE_NAME: {
-                            type: ArgumentType.STRING,
+                            type: Scratch.ArgumentType.STRING,
                             defaultValue: 'rpi1'
                         },
 
                         SENSOR_NAME: {
-                            type: ArgumentType.STRING,
+                            type: Scratch.ArgumentType.STRING,
                             defaultValue: 'tiltSensor'
                         },
                         DIRECTION: {
-                            type: ArgumentType.STRING,
+                            type: Scratch.ArgumentType.STRING,
                             defaultValue: 'any'
                         }
                     }
