@@ -440,6 +440,8 @@ RaspberryPi.prototype.helloSensor1 = function (args) {
 
 
         client.on('message', function (topic, message) {
+            
+            message = new TextDecoder("utf-8").decode(message);
 
             switch (topic){
                 case "rpi/devices/sensors/tilt/"+args.PIN:
