@@ -329,16 +329,26 @@ RaspberryPi.prototype.getInfo = function () {
                 }
             },
             {
-                opcode: 'whenTilted',
-                blockType: Scratch.BlockType.HAT,
-                func: "whenTilted",
-                text: 'when tilted',
-                arguments: {
-                    DIRECTION: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: "any"
+                  opcode: 'whenTilted',
+                    blockType: BlockType.HAT,
+                    func: 'whenTilted',
+                    text: 'when [SENSOR_NAME] of [DEVICE_NAME] is tilted',
+                    arguments: {
+
+                        DEVICE_NAME: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'rpi1'
+                        },
+
+                        SENSOR_NAME: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'tiltSensor'
+                        },
+                        DIRECTION: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'any'
+                        }
                     }
-                }
 
             },
             {
@@ -474,15 +484,13 @@ RaspberryPi.prototype.hellouln = function (args) {
 };
 
 RaspberryPi.prototype.whenTilted = function (args) {
-    return this.state.tilted;
+     return this.devices[args.DEVICE_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME] &&
+            this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME].tilted;
 };
 RaspberryPi.prototype.isTilted = function (args) {
     return this.devices[args.DEVICE_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME].tilted;
 };
 
-RaspberryPi.prototype.whenTilted = function (args) {
-    return this.state.isProximal;
-};
 RaspberryPi.prototype.isProximal = function (args) {
     return this.devices[args.DEVICE_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME] && this.devices[args.DEVICE_NAME].state[args.SENSOR_NAME].proximal;
 };
